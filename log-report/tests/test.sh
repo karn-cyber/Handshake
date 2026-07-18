@@ -1,9 +1,8 @@
 #!/bin/bash
-# Verifier entrypoint. Runs the output checks, emits a CTRF report, and always
-# (re)writes the reward so it never trusts anything the agent may have left behind.
-#
-# pytest and pytest-json-ctrf are baked into the environment image
-# (see environment/Dockerfile), so no network access is required here.
+# Verifier entrypoint. pytest and pytest-json-ctrf are baked into the single
+# environment/Dockerfile, so this runs plain pytest with no verify-time installs.
+# It emits a CTRF report and always (re)writes the reward, never trusting any
+# reward file the agent may have left behind.
 
 # Harbor reads the reward and the CTRF report from /logs/verifier.
 mkdir -p /logs/verifier

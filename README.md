@@ -19,14 +19,12 @@ Both conditions hold: oracle → **reward 1.0**, nop → **reward 0.0**.
 
 | # | File | Defect | Fix |
 |---|------|--------|-----|
-| 1 | `task.toml` | `artifacts = "/app/out.json"` was a **string** (schema requires a list) and pointed at a path the task never produces. | `artifacts = ["/app/report.json"]` — valid list, matching the real output. |
-| 2 | `task.toml` | Missing `schema_version`; non-standard metadata; no author attribution. | Added `schema_version = "1.3"`, `[task].authors`, and canonical metadata fields. |
-| 3 | `task.toml` | Deprecated `allow_internet`. | Replaced with `network_mode` and explicit `os = "linux"`. |
-| 4 | `environment/Dockerfile` | Base image `python:latest` — not reproducible. | Pinned by digest: `python@sha256:9d7f2875…` (python:3.13-slim-bookworm). |
-| 5 | `environment/Dockerfile` | **Leaked solution**: `COPY solution_hint.py` (a full reference implementation) into the agent image. | Removed the COPY and deleted the file. |
-| 6 | `instruction.md` | Vague prose, no measurable criteria. | Rewrote with numbered success criteria consistent with the verifier (output path, exact keys/types, correctness). |
-| 7 | `tests/test_outputs.py` | Verifier only checked the file **existed / was non-empty** — an empty `{}` would pass. | Parses the JSON and asserts the real values against ground truth (`total_requests=6`, `unique_ips=3`, `top_path=/index.html`). |
-| 8 | `tests/test.sh` | Wrote reward to `/app/reward.txt` (Harbor never reads it) and produced no CTRF report. | Writes reward to `/logs/verifier/reward.txt`, emits `/logs/verifier/ctrf.json`, always (re)writes the reward. |
+| 1 | `task.toml` | `artifacts = "/app/out.json"` was a **string** (schema requires an array) and pointed at a file the task never produces. | `artifacts = ["/app/report.json"]` — a top-level array matching the real output. |
+| 2 | `environment/Dockerfile` | Base image `python:latest` — not reproducible. | Pinned by digest: `python@sha256:9d7f2875…` (python:3.13-slim-bookworm). |
+| 3 | `environment/Dockerfile` | **Leaked solution**: `COPY solution_hint.py` (a full reference implementation) into the agent image. | Removed the `COPY` and deleted `environment/solution_hint.py` from the build context. |
+| 4 | `tests/test_outputs.py` | Verifier only checked the file **existed / was non-empty** — an empty `{}` or wrong values would pass. | Parses the JSON and asserts the real values (`total_requests=6`, `unique_ips=3`, `top_path=/index.html`), one test per instruction criterion. |
+| 5 | `tests/test.sh` | Wrote reward to `/app/reward.txt` (Harbor never reads it) and produced no CTRF report. | Writes reward to `/logs/verifier/reward.txt`, emits `/logs/verifier/ctrf.json`, always (re)writes the reward. |
+| 6 | `instruction.md` | Vague prose, no measurable criteria. | Rewrote with numbered success criteria that map 1:1 to the verifier tests. |
 
 ## Why the verifier is honest
 

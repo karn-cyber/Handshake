@@ -10,19 +10,20 @@ Each log line looks like:
 ```
 
 The client IP is the first whitespace-separated field, and the requested path is the
-second token inside the quoted request (`"GET /index.html HTTP/1.1"` → `/index.html`).
+second token inside the quoted request line (`"GET /index.html HTTP/1.1"` →
+`/index.html`).
 
 ## Success criteria
 
-1. Write your report to the file `/app/report.json`.
-2. The file must contain a single JSON object with exactly these three keys:
-   - `total_requests` (integer): the total number of non-empty log lines.
-   - `unique_ips` (integer): the count of distinct client IP addresses.
-   - `top_path` (string): the requested path that appears most often. If there is a
-     tie, any one of the most frequent paths is acceptable.
-3. The values must be computed from the contents of `/app/access.log` and must be
-   correct for that log.
-4. The JSON must be valid and parseable (e.g. loadable with `json.load`).
+1. Write a report to `/app/report.json` that is a single valid JSON object (parseable
+   with `json.load`) containing the keys `total_requests`, `unique_ips`, and
+   `top_path`.
+2. `total_requests` is an integer equal to the number of non-empty lines in
+   `/app/access.log`.
+3. `unique_ips` is an integer equal to the number of distinct client IP addresses in
+   the log.
+4. `top_path` is a string equal to the requested path that appears most often in the
+   log. If several paths tie for the most requests, any one of them is acceptable.
 
 For example, a valid report has the shape:
 
