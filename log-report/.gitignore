@@ -1,0 +1,13 @@
+# Git
+.git/
+
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Harbor
+jobs/
+dist.tar.gz

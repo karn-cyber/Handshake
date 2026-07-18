@@ -1,0 +1,10 @@
+# Original broken bundle / scratch
+fix-task-broken.tar.gz
+scratch_*/
+# Harbor run output
+jobs/
+**/jobs/
+# OS / Python
+.DS_Store
+__pycache__/
+*.pyc
